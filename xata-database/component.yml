@@ -1,0 +1,23 @@
+kind: GenericComponent
+name: xata-database
+runnerImage: bunnyshell/basic-runner-image:0.1.0
+deploy:
+    - curl -L -o create_database.sh https://raw.githubusercontent.com/bunnyshell/connectors/main/xata-database/scripts/create_database.sh
+    - . create_database.sh
+destroy:
+    - curl -L -o delete_database.sh https://raw.githubusercontent.com/bunnyshell/connectors/main/xata-database/scripts/delete_database.sh
+    - . delete_database.sh
+start:
+    - echo "Start scripts are not needed."
+stop:
+    - echo "Stop scripts are not needed."
+exportVariables:
+    - DB_HOST
+    - BRANCH_ID
+environment:
+    API_TOKEN: [[XATA_ACCESS_TOKEN]]
+    CONNECTION_STRING: '{{ components.xata-database.exported.CONNECTION_STRING }}'
+    BRANCH_ID: '{{ components.xata-database.exported.BRANCH_ID }}'
+    PROJECT_ID: [[XATA_PROJECT_ID]]
+    SOURCE_BRANCH_ID: [[XATA_SOURCE_BRANCH_ID]]
+    TARGET_BRANCH_NAME: 'bns-{{ env.unique}}'
