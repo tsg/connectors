@@ -1,23 +1,24 @@
       kind: GenericComponent
       name: xata-database
-      runnerImage: bunnyshell/basic-runner-image:0.1.0
+      runnerImage: 'bunnyshell/basic-runner-image:0.1.0'
       deploy:
-          - curl -L -o create_database.sh https://raw.githubusercontent.com/tsg/connectors/refs/heads/xata_new_db_platform/xata-database/scripts/create_database.sh
-          - . create_database.sh
+          - 'curl -L -o create_database.sh https://raw.githubusercontent.com/tsg/connectors/refs/heads/xata_new_db_platform/xata-database/scripts/create_database.sh'
+          - '. create_database.sh'
       destroy:
-          - curl -L -o delete_database.sh https://raw.githubusercontent.com/tsg/connectors/refs/heads/xata_new_db_platform/xata-database/scripts/delete_database.sh
-          - . delete_database.sh
+          - 'curl -L -o delete_database.sh https://raw.githubusercontent.com/tsg/connectors/refs/heads/xata_new_db_platform/xata-database/scripts/delete_database.sh'
+          - '. delete_database.sh'
       start:
-          - echo "Start scripts are not needed."
+          - 'echo "Start scripts are not needed."'
       stop:
-          - echo "Stop scripts are not needed."
+          - 'echo "Stop scripts are not needed."'
       exportVariables:
-          - DB_HOST
+          - CONNECTION_STRING
           - BRANCH_ID
       environment:
-          API_TOKEN: [[XATA_ACCESS_TOKEN]]
-          CONNECTION_STRING: '{{ components.xata-database.exported.CONNECTION_STRING }}'
+          API_TOKEN: '{{ env.vars.XATA_ACCESS_TOKEN }}'
           BRANCH_ID: '{{ components.xata-database.exported.BRANCH_ID }}'
-          PROJECT_ID: [[XATA_PROJECT_ID]]
-          SOURCE_BRANCH_ID: [[XATA_SOURCE_BRANCH_ID]]
-          TARGET_BRANCH_NAME: 'bns-{{ env.unique}}'
+          CONNECTION_STRING: '{{ components.xata-database.exported.CONNECTION_STRING }}'
+          ORGANIZATION_ID: '{{ env.vars.ORGANIZATION_ID }}'
+          PROJECT_ID: '{{ env.vars.PROJECT_ID }}'
+          SOURCE_BRANCH_ID: '{{ env.vars.SOURCE_BRANCH }}'
+          TARGET_BRANCH_NAME: 'bns-{{ env.unique }}'

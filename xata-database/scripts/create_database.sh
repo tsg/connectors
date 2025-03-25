@@ -37,8 +37,6 @@ create_branch_response=$( \
         --data "{\"parentID\": \"$SOURCE_BRANCH_ID\", \"name\": \"$TARGET_BRANCH_NAME\"}" \
 )
 
-echo "create_branch_response: $create_branch_response"
-
 create_branch_response_code=$(echo "$create_branch_response" | tail -n1)
 create_branch_response_body=$(echo "$create_branch_response" | sed '$d')
 
@@ -56,6 +54,9 @@ fi
 echo "Waiting for the connection string"
 
 while true; do
+    sleep 1
+    echo -n "."
+
     connection_string_response=$( \
         curl -s -w "\n%{http_code}" \
             --request GET \
@@ -66,21 +67,15 @@ while true; do
     connection_string_response_code=$(echo "$connection_string_response" | tail -n1)
     connection_string_response_body=$(echo "$connection_string_response" | sed '$d')
 
-    if [ "$connection_string_response_code" -gt 299 ]; then
-        echo "Error getting the connection string"
-        echo "HTTP code: $connection_string_response_code"
-        echo "$connection_string_response_body"
-        exit 1
+    if [ "$connection_string_response_code" -eq 200 ]; then
+        CONNECTION_STRING=$(echo "$connection_string_response_body" | jq -r '.connectionString')
     fi
-    CONNECTION_STRING=$(echo "$connection_string_response_body" | jq -r '.connectionString')
 
     if [ -n "$CONNECTION_STRING" ]; then
         echo "Connection string ready"
         break
     fi
 
-    sleep 1
-    echo -n "."
 done
 
 echo "Connection string: $CONNECTION_STRING"
