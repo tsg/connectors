@@ -37,6 +37,8 @@ create_branch_response=$( \
         --data "{\"parentID\": \"$SOURCE_BRANCH_ID\", \"name\": \"$TARGET_BRANCH_NAME\"}" \
 )
 
+echo "create_branch_response: $create_branch_response"
+
 create_branch_response_code=$(echo "$create_branch_response" | tail -n1)
 create_branch_response_body=$(echo "$create_branch_response" | sed '$d')
 
